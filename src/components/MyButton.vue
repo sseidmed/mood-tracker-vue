@@ -1,24 +1,23 @@
 <template>
- 
         <button 
-            @click="onClick" 
-            class="button">
-            <slot></slot>
+            @click="onClick()" 
+            class="button"
+            :style="{ background: color }">
+            {{ text }}
         </button>
-        
- 
 </template>
 
 <script>
     export default {
-        name: "Button",
+        name: "MyButton",
         props: {
-            onClick: {
-                type: Function,
-                required: true
-            },   
-            showAddMood: Boolean
-
+            text: String,
+            color: String
+        },
+        methods: {
+            onClick() {
+                this.$emit('btn-click')
+            }
         }
     }
 </script>
@@ -33,6 +32,7 @@ button {
     border-radius: 30px;
     display: inline-block;
     height: 8vh;
+    min-width: 150px;
     border: 1px solid black;
     transition: all 0.4s ease 0s;
 }

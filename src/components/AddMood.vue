@@ -1,60 +1,88 @@
 <template>
     <div class="addmood">
-        <form action="">
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date">
+        <form @submit="onSubmit">
+            <label for="date">Date:</label>
+            <input v-model="date" type="date" id="date" name="date"><br>
 
             <label for="cars">Choose your mood:</label>
 
-            <select name="moods" id="moods">
-                <option value="excellent">Excellent</option>
-                <option value="good">Good</option>
-                <option value="meh">Meh</option>
-                <option value="bad">Bad</option>
-                <option value="awful">Awful</option>
+            <select v-model="mood_type" name="moods" id="moods">
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Meh">Meh</option>
+                <option value="Bad">Bad</option>
+                <option value="Awful">Awful</option>
             </select>
 
+            <h3 class="activities-title">Activities</h3>
             <div class="activities">
                 <div>
-                    <input type="checkbox" id="sleep" name="sleep" value="sleep">
+                    <input v-model="selected" type="checkbox" id="sleep" name="sleep" value="Good Sleep">
                     <label for="sleep">Good Sleep</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="eat" name="eat" value="eat">
-                    <label for="vehicle2">Eat Healthy</label>
+                    <input v-model="selected" type="checkbox" id="eat" name="eat" value="Eat Healthy">
+                    <label for="eat">Eat Healthy</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="exercise" name="exercise" value="exercise">
-                    <label for="exercise">Exercise</label>
+                    <input v-model="selected" type="checkbox" id="exercise" name="exercise" value="Exercise">
+                    <label for="Exercise">Exercise</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="read" name="read" value="read">
-                    <label for="read">Read</label>
+                    <input v-model="selected" type="checkbox" id="read" name="read" value="read">
+                    <label for="Read">Read</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="meditate" name="meditate" value="meditate">
-                    <label for="meditate">Meditate</label>
+                    <input v-model="selected" type="checkbox" id="meditate" name="meditate" value="Meditate">
+                    <label for="Meditate">Meditate</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="code" name="code" value="code">
-                    <label for="code">Code</label>
+                    <input v-model="selected" type="checkbox" id="code" name="code" value="Code">
+                    <label for="Code">Code</label>
                 </div>
             </div>
-            <Button :onClick="submitView">Submit</Button>
+            <button type="submit" value="Save Mood">Save Mood</button>
         </form>
     </div>
 </template>
 
 <script>
-import Button from '@/components/Button.vue';
+
     export default {
         name: "AddMood",
-        components: {
-            Button
+        data() {
+            return {
+                date: '',
+                mood_type: '',
+                selected: [],
+                activities: [
+                    { text: 'Excellent', value: 'Excellent' },
+                    { text: 'Good', value: 'Good' },
+                    { text: 'Meh', value: 'Meh' },
+                    { text: 'Bad', value: 'Bad' },
+                    { text: 'Awful', value: 'Awful' }
+                ]
+            }
         },
         methods: {
-            submitView() {
-                alert("Alert from the Submit button")
+            onSubmit(e) {
+                e.preventDefault()
+                if (!this.date) {
+                    alert('Please choose a date')
+                    return
+                }
+
+                const newMood = {
+                    id: Math.floor(Math.random() * 100000),
+                    date: this.date, 
+                    mood_type: this.mood_type,
+                    selected: this.selected
+                }
+                this.$emit('add-mood', newMood)
+
+                this.date = ''
+                this.mood_type = '',
+                this.selected = []
             }
             
         }
@@ -66,7 +94,6 @@ import Button from '@/components/Button.vue';
 .activities > div {
     margin-top: 10px;
 }
-
 select {
     background: #60a3bc;
     width: 140px;
@@ -113,8 +140,18 @@ input[type="date"], focus {
 .addmood {
     display: flex;
     background-color: #c8effd;
-    width: 420px;
-    margin: auto;
     padding: 40px;
 }
+.activities {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+.activities > div {
+    width: 50%;
+}
+.activities-title {
+    text-align: center;
+}
+
 </style>
